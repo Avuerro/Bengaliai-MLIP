@@ -24,7 +24,7 @@ import cv2
 import imgaug.augmenters as iaa
 
 ## we need data
-bigdataset = BigDataSet('./')
+bigdataset = BigDataSet('../')
 data,labels = bigdataset.load_parquet_files()
 
 

@@ -22,7 +22,7 @@ import gc
 
 # LOADING THE DATA
 
-DATA_DIR = '../data/bengaliai-cv19/'
+DATA_DIR = '../bengaliai-cv19/'
 
 
 class BigDataSet(object):
