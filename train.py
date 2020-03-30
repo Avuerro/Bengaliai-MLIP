@@ -20,7 +20,7 @@ class TrainModel(object):
         self.model = model
         self.device = device
         self.criterion = criterion
-        self.tain_data = train_data
+        self.train_data = train_data
         self.validation_data =validation_data
         self.optimizer = optimizer
         self.scheduler = scheduler
@@ -91,11 +91,11 @@ class TrainModel(object):
 
                 # iterate over data
                 for inputs, labels in dataloaders:#dataloaders[phase]:
-                    inputs = inputs.float().to(device)
-                    labels = labels.to(device)
+                    inputs = inputs.float().to(self.device)
+                    labels = labels.to(self.device)
 
                     # zero the parameter gradients
-                    optimizer.zero_grad()
+                    self.optimizer.zero_grad()
 
                     # forward
                     # track history if only in train
@@ -154,22 +154,22 @@ class TrainModel(object):
                 # calculate loss and accuracy of this epoch
                 
                 # Grapheme loss and accuracy
-                epoch_loss_grapheme = running_loss_grapheme / len(self.dataloaders.dataset)
+                epoch_loss_grapheme = running_loss_grapheme / len(dataloaders.dataset)
                 epoch_acc_grapheme = running_corrects_grapheme #/ len(dataloaders.dataset)
 
                 # Vowel loss and accuracy
-                epoch_loss_vowel = running_loss_vowel / len(self.dataloaders.dataset)
+                epoch_loss_vowel = running_loss_vowel / len(dataloaders.dataset)
                 epoch_acc_vowel = running_corrects_vowel #/ len(dataloaders.dataset)
 
                 
                 # consonant loss and accuracy
-                epoch_loss_consonant = running_loss_consonant / len(self.dataloaders.dataset)
+                epoch_loss_consonant = running_loss_consonant / len(dataloaders.dataset)
                 epoch_acc_consonant = running_corrects_consonant #/ len(dataloaders.dataset)
 
                 
                 
                 #Total loss and Accuracy
-                epoch_loss = running_loss / len(self.dataloaders.dataset) #dataset_sizes[phase]
+                epoch_loss = running_loss / len(dataloaders.dataset) #dataset_sizes[phase]
                 epoch_acc = running_corrects 
     #             epoch_acc = running_corrects / len(dataloaders.dataset) #dataset_sizes[phase]
                 if phase == 'train':
@@ -188,7 +188,7 @@ class TrainModel(object):
                 accuracies_vowel.append(epoch_acc_vowel)
                 accuracies_consonant.append(epoch_acc_consonant)
                 
-                print("The dataloader length %s " % str(len(self.dataloaders.dataset)))
+                print("The dataloader length %s " % str(len(dataloaders.dataset)))
                 # print loss and accuracy score
                 print(' {} Grapheme Loss: {:.4f} Grapheme Acc: {:.4f}'.format(phase, epoch_loss_grapheme, epoch_acc_grapheme))
                 print(' {} Vowel Loss: {:.4f} Vowel Acc: {:.4f}'.format(phase, epoch_loss_vowel, epoch_acc_vowel))
@@ -217,7 +217,8 @@ class TrainModel(object):
 
         # load best model weights
         self.model.load_state_dict(best_model_wts)
-        PATH = os.path.join(DATA_DIR,'weights', 'resnet50_saved_weights_%s.pth' % str(time.time()).split(".")[0])
+        ## add variable to determine output path 
+        PATH = os.path.join('./','weights', 'resnet50_saved_weights_%s.pth' % str(time.time()).split(".")[0])
         torch.save(best_model_wts, PATH  )#'resnet50_saved_weights.pth')
         all_losses = {"total_losses": losses, 
                     "grapheme_loss": losses_grapheme,
