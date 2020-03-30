@@ -16,7 +16,7 @@ import sklearn.metrics
 
 
 class TrainModel(object):
-    def __init__(self, model,device,criterion,train_data,validation_data,optimizer,scheduler,num_epochs=25,data_dir):
+    def __init__(self, model,device,criterion,train_data,validation_data,optimizer,scheduler,num_epochs,data_dir):
         self.model = model
         self.device = device
         self.criterion = criterion
@@ -24,7 +24,7 @@ class TrainModel(object):
         self.validation_data =validation_data
         self.optimizer = optimizer
         self.scheduler = scheduler
-        self.num_epoch = num_epochs
+        self.num_epochs = num_epochs
         self.data_dir = data_dir
 
     ## 
