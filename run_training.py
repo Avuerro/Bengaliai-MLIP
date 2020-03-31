@@ -23,9 +23,9 @@ import copy
 import cv2
 import imgaug.augmenters as iaa
 
-## we need data
-bigdataset = BigDataSet('../')
-data,labels = bigdataset.load_parquet_files()
+## we need data 
+# bigdataset = BigDataSet('../')
+# data,labels = bigdataset.load_parquet_files()
 
 
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
@@ -33,7 +33,7 @@ normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
 composed = transforms.Compose([normalize])
 
 ##Pytorch Dataset Class
-dataset = BengaliDataLoader(data,labels,transform=composed)
+dataset = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
 
 
 train_dataset,validation_dataset = torch.utils.data.random_split(dataset, [(int) (0.8 * len(dataset)), (int) (0.2 * len(dataset))])
