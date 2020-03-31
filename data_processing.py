@@ -67,8 +67,10 @@ class BigDataSet(object):
         self.data_array = self.data_array.reshape(-1,137,236)
         np.save('img_data_full.npy', self.data_array)
         np.save('img_labels.npy', labels)
+#        plt.imsave('test_afbeelding.png', self.data_array[0])
+#        print(labels[0])
 
         return self.data_array,labels
 
-dataset = BigDataSet(DATA_DIR)
-dataset.load_parquet_files()
+#dataset = BigDataSet(DATA_DIR)
+#dataset.load_parquet_files()
