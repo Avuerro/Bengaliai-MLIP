@@ -58,12 +58,13 @@ def resize(image, size=(128, 128)):
 # dataloader that combines the images and labels into one convenient class
 # also uses the make_square function to reshape the images
 class BengaliDataLoader(Dataset):
-    def __init__(self,images,labels=None, transform=None, indices=None):
-        self.images = images
-        self.labels = labels
-        if indices is None:
-            indices = np.arange(len(self.images))
-        self.indices = indices
+    def __init__(self,images,labels=None, transform=None):
+        self.images = 'img_data_full.npy'
+        self.labels = 'img_labels.npy'
+        
+        # if indices is None:
+        #     indices = np.arange(len(self.images))
+        # self.indices = indices
         self.train = labels is not None
         self.transform = transform
     
@@ -71,6 +72,8 @@ class BengaliDataLoader(Dataset):
         return len(self.indices)
     
     def __getitem__(self,idx):
+        self.images = np.load(self.images)
+        self.labels = np.load(self.labels)
 #         idx = self.indices[idx]
         img = np.zeros((256, 256, 3))
         tmp = self.images[idx]
