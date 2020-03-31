@@ -55,8 +55,8 @@ def resize(image, size=(128, 128)):
 # also uses the make_square function to reshape the images
 class BengaliDataLoader(Dataset):
     def __init__(self,images,labels=None, transform=None):
-        self.images = 'img_data_full.npy'
-        self.labels = 'img_labels.npy'
+        self.images_location = 'img_data_full.npy'
+        self.labels_location = 'img_labels.npy'
         
         # if indices is None:
         #     indices = np.arange(len(self.images))
@@ -65,14 +65,14 @@ class BengaliDataLoader(Dataset):
         self.transform = transform
     
     def __len__(self):        
-        return len(np.load(self.labels))
+        return len(np.load(self.labels_location))
     
     def __getitem__(self,idx):
-        self.images = np.load(self.images)
-        self.labels = np.load(self.labels)
+        image = np.load(self.images_location)[idx]
+        label = np.load(self.labels_location)[idx]
 #         idx = self.indices[idx]
         img = np.zeros((256, 256, 3))
-        tmp = self.images[idx]
+        tmp = image#images[idx]
 #         tmp = (255 - tmp).astype(np.float32) / 255.
         tmp = tmp/255. #tmp.astype(np.float32)/255.
 
@@ -91,7 +91,7 @@ class BengaliDataLoader(Dataset):
 #             x = x.reshape(256,256,3)
             
         if self.train:
-            y = self.labels[idx]
+            y = label
             y = torch.from_numpy(y)
             return x,y
         else:
