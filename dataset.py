@@ -50,33 +50,44 @@ class BengaliData(Dataset):
             x = self.transform(x)
 #            y = self.transform(label[0])
 #            x = x.reshape(256,256,3)
-            
+        x = torch.from_numpy(x)
+    
         if self.train:
             y = label[0]
             y = torch.from_numpy(y)
+            # x = torch.from_numpy(x)
             return x,y
         else:
             return x.T
 
 ## testing purposes
-#totensor = transforms.ToTensor()
+# totensor = transforms.ToTensor()
 
-#normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+# normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
 #                               std=[0.229, 0.224, 0.225])
-#composed = transforms.Compose([totensor])
+# composed = transforms.Compose([])
 
 
 
-#DATA_DIR = '../../data/bengaliai-cv19/'
+# DATA_DIR = '../../data/bengaliai-cv19/'
     
-# train data
-#train_csv_location = os.path.join(DATA_DIR, 'train.csv')
+# # train data
+# train_csv_location = os.path.join(DATA_DIR, 'train.csv')
 
-#train_csv = pd.read_csv(train_csv_location)
-#train_images_location = './results/'
+# train_csv = pd.read_csv(train_csv_location)[:50210]
+# train_images_location = './results/'
 
-#bdl = BengaliData(train_images_location,train_csv,transform=composed)
+# bdl = BengaliData(train_images_location,train_csv,transform=composed)
 
+# for i in range(0,len(bdl)):
+#     image,lable = bdl[i]
+#     image = image.numpy()
+#     print('----')
+#     print(image.shape)
+#     print('-----')
+#     plt.imsave('ff_test_%s.png' % str(i),image.reshape(256,256,3))
+#     plt.imshow(image.reshape(256,256,3))
+#     plt.show()
 
 #print(bdl.__len__())
 #image,label = bdl[10]
