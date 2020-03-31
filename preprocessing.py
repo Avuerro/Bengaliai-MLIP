@@ -18,11 +18,7 @@ import copy
 import cv2
 import imgaug.augmenters as iaa
 
-
-
-
 res = iaa.Resize(256)
-
 
 # change size of image to 256x256
 def make_square(img, target_size=256):
@@ -103,12 +99,15 @@ class BengaliDataLoader(Dataset):
 
 ## testing purposes
 
-normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-composed = transforms.Compose([normalize])
-bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
+#normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+#                                 std=[0.229, 0.224, 0.225])
+#composed = transforms.Compose([normalize])
+#bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
 
-image,label = bdl[10]
+#image,label = bdl[10]
+#print(image.numpy().shape)
 
-plt.imsave('test_afbeelding_%s.png' % str(10), image.reshape(256,256,3))
-print(label)
+#print(image.numpy().reshape(256,256,3))
+#plt.imshow(image.numpy().T)
+#plt.imsave('test_afbeelding_%s.png' % str(10), image.numpy().T)
+#print(label)
