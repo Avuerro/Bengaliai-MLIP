@@ -38,9 +38,9 @@ dataset = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=compo
 
 train_dataset,validation_dataset = torch.utils.data.random_split(dataset, [(int) (0.8 * len(dataset)), (int) (0.2 * len(dataset))])
 ## create training DataLoader
-train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=12,shuffle=True, num_workers = 4)
+train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=12,shuffle=True, num_workers = 2)
 ## Create Validation DataLoader
-validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=12,shuffle=True, num_workers = 4)
+validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=12,shuffle=True, num_workers = 2)
 
 
 
