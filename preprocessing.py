@@ -100,3 +100,15 @@ class BengaliDataLoader(Dataset):
             return x,y
         else:
             return x.T
+
+## testing purposes
+
+normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+composed = transforms.Compose([normalize])
+bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
+
+image,label = bdl[10]
+
+plt.imsave('test_afbeelding_%s.png' % str(10), image.reshape(256,256,3))
+print(label)
