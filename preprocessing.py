@@ -57,4 +57,4 @@ def create_new_images(data_dir, output_dir, original_width,original_height,new_w
         del parquet_data
         gc.collect()
 
-create_new_images('../../data/bengaliai-cv19','./results/',236,137,256,256)
+create_new_images('../','../train/',236,137,256,256)

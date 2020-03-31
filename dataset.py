@@ -40,52 +40,53 @@ class BengaliData(Dataset):
         ## de image_id is ook direct bestandsnaam voor de afbeelding..
         image_id = self.labels['image_id'].values[idx]
         label = self.labels[self.labels['image_id']==image_id][['grapheme_root','vowel_diacritic','consonant_diacritic']].values
-        print(image_id)
-        print(os.path.join(self.images_location,image_id + '.png'))
+        #print(image_id)
+        #print(os.path.join(self.images_location,image_id + '.png'))
         image = cv2.imread(os.path.join(self.images_location,image_id +'.png'))
 
         x = image
         if self.transform:
             # x = x.reshape(3,256,256)
             x = self.transform(x)
+#            y = self.transform(label[0])
 #            x = x.reshape(256,256,3)
             
         if self.train:
-            y = label
+            y = label[0]
             y = torch.from_numpy(y)
             return x,y
         else:
             return x.T
 
 ## testing purposes
-totensor = transforms.ToTensor()
+#totensor = transforms.ToTensor()
 
-normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                               std=[0.229, 0.224, 0.225])
-composed = transforms.Compose([totensor])
+#normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+#                               std=[0.229, 0.224, 0.225])
+#composed = transforms.Compose([totensor])
 
 
 
-DATA_DIR = '../../data/bengaliai-cv19/'
+#DATA_DIR = '../../data/bengaliai-cv19/'
     
 # train data
-train_csv_location = os.path.join(DATA_DIR, 'train.csv')
+#train_csv_location = os.path.join(DATA_DIR, 'train.csv')
 
-train_csv = pd.read_csv(train_csv_location)
-train_images_location = './results/'
+#train_csv = pd.read_csv(train_csv_location)
+#train_images_location = './results/'
 
-bdl = BengaliData(train_images_location,train_csv,transform=composed)
+#bdl = BengaliData(train_images_location,train_csv,transform=composed)
 
 
-print(bdl.__len__())
-image,label = bdl[10]
+#print(bdl.__len__())
+#image,label = bdl[10]
 
-intermediate = image.numpy().astype(np.float32)
-check = intermediate[intermediate>1]
-print(check)
-print(np.sum(check))
-print(np.max(intermediate))
-plt.imsave('./test_afbeelding_10.png',image.numpy().T)
+#intermediate = image.numpy().astype(np.float32)
+#check = intermediate[intermediate>1]
+#print(check)
+#print(np.sum(check))
+#print(np.max(intermediate))
+#plt.imsave('./test_afbeelding_10.png',image.numpy().T)
 # print(image.numpy().astype(np.float32))
 
 

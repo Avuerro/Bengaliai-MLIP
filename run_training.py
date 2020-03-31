@@ -1,6 +1,6 @@
 from model import ResNet50
-from data_processing import BigDataSet
-from preprocessing import BengaliDataLoader
+#from data_processing import BigDataSet
+#from preprocessing import BengaliDataLoader
 from train import TrainModel
 from dataset import BengaliData
 
@@ -33,17 +33,17 @@ totensor = transforms.ToTensor()
 
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                std=[0.229, 0.224, 0.225])
-composed = transforms.Compose([totensor])
+composed = transforms.Compose([totensor,normalize])
 
 
 ##Pytorch Dataset Class
-DATA_DIR = '../../data/bengaliai-cv19/'
+DATA_DIR = '../'
 
 train_csv_location = os.path.join(DATA_DIR, 'train.csv')
-train_csv = pd.read_csv(train_csv_location)
+train_csv = pd.read_csv(train_csv_location).sample(frac=0.25, replace=True, random_state=1)
 
 ## t.b.c.
-train_images_location =''
+train_images_location = '../train'
 
 dataset = BengaliData(train_images_location,train_csv,transform=composed)
 # dataset = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
@@ -51,13 +51,9 @@ dataset = BengaliData(train_images_location,train_csv,transform=composed)
 
 train_dataset,validation_dataset = torch.utils.data.random_split(dataset, [(int) (0.8 * len(dataset)), (int) (0.2 * len(dataset))])
 ## create training DataLoader
-train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=12,shuffle=True, num_workers = 2)
+train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=4,shuffle=True, num_workers = 2)
 ## Create Validation DataLoader
-validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=12,shuffle=True, num_workers = 2)
-
-
-
-
+validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=4,shuffle=True, num_workers = 2)
 
 
 

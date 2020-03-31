@@ -33,7 +33,14 @@ class TrainModel(object):
         for i in range(0,3):
             y_true_subset = labels[:,i].cpu().numpy()
             y_pred_subset = torch.max(outputs[i],1)[1].cpu().numpy() #.detach().numpy()
-            scores.append(sklearn.metrics.recall_score(y_true_subset, y_pred_subset, average='macro'))
+            recall_score = sklearn.metrics.recall_score(y_true_subset,y_pred_subset,average='macro')
+            scores.append(recall_score)
+            #scores.append(sklearn.metrics.recall_score(y_true_subset, y_pred_subset, average='macro'))
+           # print('label %s' % str(i))
+           # print(y_true_subset)
+           # print(y_pred_subset)
+           # print(recall_score)
+           # print('-------------------------------------------------------')
         final_score = np.average(scores, weights=[2,1,1])
         return scores, final_score
 
@@ -96,7 +103,18 @@ class TrainModel(object):
 
                     # zero the parameter gradients
                     self.optimizer.zero_grad()
-
+                   # print('-------------------')
+                   # print(inputs.shape)
+                   # print(labels.shape)
+                   # print('LABELS0')
+                   # print(labels[:,0])
+                   # print('LABELS1')
+                   # print(labels[:,1])
+                   # print('LABELS3')
+                   # print(labels[:,2])
+                   # print('LABELSSSSS')
+                   # print(labels)
+                   # print('--------END------')
                     # forward
                     # track history if only in train
                     with torch.set_grad_enabled(phase == 'train'):
