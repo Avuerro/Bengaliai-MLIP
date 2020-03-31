@@ -65,6 +65,8 @@ class BigDataSet(object):
         del train_data_subset_4
         self.data_array = np.concatenate(self.data_array,axis=0)
         self.data_array = self.data_array.reshape(-1,137,236)
+        np.save('img_data_full.npy', self.data_array)
+        np.save('img_labels.npy', labels)
 
         return self.data_array,labels
 
