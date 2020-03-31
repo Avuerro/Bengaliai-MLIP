@@ -2,6 +2,7 @@ from model import ResNet50
 from data_processing import BigDataSet
 from preprocessing import BengaliDataLoader
 from train import TrainModel
+from dataset import BengaliData
 
 # PACKAGES
 import pandas as pd
@@ -28,12 +29,24 @@ import imgaug.augmenters as iaa
 # data,labels = bigdataset.load_parquet_files()
 
 
+totensor = transforms.ToTensor()
+
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-composed = transforms.Compose([normalize])
+                               std=[0.229, 0.224, 0.225])
+composed = transforms.Compose([totensor])
+
 
 ##Pytorch Dataset Class
-dataset = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
+DATA_DIR = '../../data/bengaliai-cv19/'
+
+train_csv_location = os.path.join(DATA_DIR, 'train.csv')
+train_csv = pd.read_csv(train_csv_location)
+
+## t.b.c.
+train_images_location =''
+
+dataset = BengaliData(train_images_location,train_csv,transform=composed)
+# dataset = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
 
 
 train_dataset,validation_dataset = torch.utils.data.random_split(dataset, [(int) (0.8 * len(dataset)), (int) (0.2 * len(dataset))])

@@ -1,115 +1,60 @@
 # PACKAGES
 import pandas as pd
 import numpy as np
-import torch
-from torch.utils.data import Dataset
 from tqdm import tqdm
-import imgaug.augmenters as iga
 import os
 import pdb
-import matplotlib.pyplot as plt
-from torchvision import transforms, utils
-from torchvision.models import resnet50,resnet18
-from torch import nn
-import torch.nn.functional as F
-from torch.nn import Sequential
 import time 
 import copy
 import cv2
-import imgaug.augmenters as iaa
-
-res = iaa.Resize(256)
-
-# change size of image to 256x256
-def make_square(img, target_size=256):
-    img = img[0:-1, :]
-    
-    height,width = img.shape
-    x = target_size
-    y = target_size
-
-    square = np.ones((x, y), np.uint8) * 255
-    square[(y - height) // 2:y - (y - height) // 2, (x - width) // 2:x - (x - width) // 2] = img
-
-    return square.T
-
-def crop_char_image(image, threshold=5./255.):
-    assert image.ndim == 2
-    is_white = image < threshold
-    is_black_vertical = np.sum(is_white, axis=0) > 0
-    is_black_horizontal = np.sum(is_white, axis=1) > 0
-    left = np.argmax(is_black_horizontal)
-    right = np.argmax(is_black_horizontal[::-1])
-    top = np.argmax(is_black_vertical)
-    bottom = np.argmax(is_black_vertical[::-1])
-    height, width = image.shape
-    cropped_image = image[left:height - right, top:width - bottom]
-    return cropped_image
+import gc
 
 
-def resize(image, size=(128, 128)):
-    return cv2.resize(image, size)
+
+## inspired by 
+# https://github.com/RobinSmits/KaggleBengaliAIHandwrittenGraphemeClassification/blob/master/KaggleKernelEfficientNetB3/preprocessing.py
+# https://stackoverflow.com/questions/23853632/which-kind-of-interpolation-best-for-resizing-image
 
 
-# dataloader that combines the images and labels into one convenient class
-# also uses the make_square function to reshape the images
-class BengaliDataLoader(Dataset):
-    def __init__(self,images,labels=None, transform=None):
-        self.images_location = 'img_data_full.npy'
-        self.labels_location = 'img_labels.npy'
+def normalize_and_resize_img(img, new_width,new_height):
+    img = 255 -img
+
+    img = (img * (255.0 / img.max())).astype(np.uint8)
+
+    img = img.reshape(137,236)
+    resized_image = cv2.resize(img, dsize=(new_width,new_height), interpolation=cv2.INTER_AREA)
+
+    return resized_image
+
+def resize_and_save_image(img,image_id,output_dir,original_width,original_height, new_width,new_height):
+
+    ## invert and normalize first
+    normalized_resized_image = normalize_and_resize_img(img,new_width,new_height)
+    cv2.imwrite(output_dir + str(image_id) + '.png',normalized_resized_image)
+
+
+def create_new_images(data_dir, output_dir, original_width,original_height,new_width, new_height):
+
+    # parquet_locations = [ x for x in os.listdir(data_dir) if 'train_image_data' in x ]
+    # parquet_locations.sort()
+
+
+    for i in tqdm(range(0,1)):
+
+
+        ## read parquet files
+        parquet_data = pd.read_parquet(os.path.join(data_dir, 'train_image_data_'+str(i)+'.parquet'))
+
+        image_ids = parquet_data['image_id'].values
+
+        parquet_data = parquet_data.drop('image_id', axis='columns')
+
+        for image_id, index in zip(image_ids, range(parquet_data.shape[0])):
+            # image = parquet_data.iloc[index].values
+            resize_and_save_image(parquet_data.iloc[index].values, image_id,output_dir, original_width, original_height, new_width,new_height)
         
-        # if indices is None:
-        #     indices = np.arange(len(self.images))
-        # self.indices = indices
-        self.train = labels is not None
-        self.transform = transform
-    
-    def __len__(self):        
-        return len(np.load(self.labels_location))
-    
-    def __getitem__(self,idx):
-        image = np.load(self.images_location)[idx]
-        label = np.load(self.labels_location)[idx]
-#         idx = self.indices[idx]
-        img = np.zeros((256, 256, 3))
-        tmp = image#images[idx]
-#         tmp = (255 - tmp).astype(np.float32) / 255.
-        tmp = tmp/255. #tmp.astype(np.float32)/255.
 
-        tmp = crop_char_image(tmp,threshold = 250./255.)
-        tmp = res(images=tmp)
-        img[..., 0] = tmp
-        img[..., 1] = img[..., 0]
-        img[..., 2] = img[..., 0]
+        del parquet_data
+        gc.collect()
 
-
-        x = torch.from_numpy(img)
-        if self.transform:
-            x = x.reshape(3,256,256)
-            x = self.transform(x)
-
-#             x = x.reshape(256,256,3)
-            
-        if self.train:
-            y = label
-            y = torch.from_numpy(y)
-            return x,y
-        else:
-            return x.T
-
-## testing purposes
-
-#normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-#                                std=[0.229, 0.224, 0.225])
-#composed = transforms.Compose([normalize])
-#bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
-
-
-#bdl.__len__()
-#image,label = bdl[10]
-#print(image.numpy().shape)
-
-#print(image.numpy().reshape(256,256,3))
-#plt.imshow(image.numpy().T)
-#plt.imsave('test_afbeelding_%s.png' % str(10), image.numpy().T)
-#print(label)
+create_new_images('../../data/bengaliai-cv19','./results/',236,137,256,256)
