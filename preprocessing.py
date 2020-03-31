@@ -64,8 +64,8 @@ class BengaliDataLoader(Dataset):
         self.train = labels is not None
         self.transform = transform
     
-    def __len__(self):
-        return len(self.indices)
+    def __len__(self):        
+        return len(np.load(self.labels))
     
     def __getitem__(self,idx):
         self.images = np.load(self.images)
@@ -99,11 +99,13 @@ class BengaliDataLoader(Dataset):
 
 ## testing purposes
 
-#normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-#                                 std=[0.229, 0.224, 0.225])
-#composed = transforms.Compose([normalize])
-#bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
+normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                std=[0.229, 0.224, 0.225])
+composed = transforms.Compose([normalize])
+bdl = BengaliDataLoader('img_data_full.npy','img_labels.npy',transform=composed)
 
+
+bdl.__len__()
 #image,label = bdl[10]
 #print(image.numpy().shape)
 
