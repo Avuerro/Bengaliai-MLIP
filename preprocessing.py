@@ -39,7 +39,7 @@ def create_new_images(data_dir, output_dir, original_width,original_height,new_w
     # parquet_locations.sort()
 
 
-    for i in tqdm(range(0,1)):
+    for i in tqdm(range(0,4)):
 
 
         ## read parquet files
