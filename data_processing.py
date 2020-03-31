@@ -70,5 +70,5 @@ class BigDataSet(object):
 
         return self.data_array,labels
 
-# dataset = BigDataSet(DATA_DIR)
-# dataset.load_parquet_files()
+dataset = BigDataSet(DATA_DIR)
+dataset.load_parquet_files()
