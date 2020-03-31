@@ -59,7 +59,7 @@ def resize(image, size=(128, 128)):
 # also uses the make_square function to reshape the images
 class BengaliDataLoader(Dataset):
     def __init__(self,images,labels=None, transform=None, indices=None):
-        self.images = self.images
+        self.images = images
         self.labels = labels
         if indices is None:
             indices = np.arange(len(self.images))

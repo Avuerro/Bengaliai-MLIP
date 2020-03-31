@@ -38,9 +38,9 @@ dataset = BengaliDataLoader(data,labels,transform=composed)
 
 train_dataset,validation_dataset = torch.utils.data.random_split(dataset, [(int) (0.8 * len(dataset)), (int) (0.2 * len(dataset))])
 ## create training DataLoader
-train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=12,shuffle=True)
+train_dataloader = torch.utils.data.DataLoader(train_dataset,batch_size=12,shuffle=True, num_workers = 4)
 ## Create Validation DataLoader
-validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=12,shuffle=True)
+validation_dataloader = torch.utils.data.DataLoader(validation_dataset,batch_size=12,shuffle=True, num_workers = 4)
 
 
 
@@ -66,7 +66,8 @@ model = ResNet50().to(device)
 print(model)
 
 ## traincode
+num_epochs = 1
+output_dir = './'
 
-
-model, losses, accuracies = TrainModel(model,device,criterion,train_dataloader,validation_dataloader,optimizer_ft,exp_lr_scheduler)
-
+model_trainer  = TrainModel(model,device,criterion,train_dataloader,validation_dataloader,optimizer_ft,exp_lr_scheduler,num_epochs,output_dir)
+model, losses, accuracies = model_trainer.train_model()
