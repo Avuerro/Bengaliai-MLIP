@@ -17,24 +17,18 @@ import time
 import copy
 import cv2
 import imgaug.augmenters as iaa
+import pretrainedmodels
 
 
 
-
-# finetuning the network
+# BASELINE RESNET50 Model
 class ResNet50(torch.nn.Module):
-    def __init__(self):
+    def __init__(self,):
         super(ResNet50, self).__init__()
 
         self.resnet50 = resnet50(pretrained=True,progress=True)
-#         for param in self.resnet50.parameters():
-#             param.requires_grad = False
-
         self.learned_features =  nn.Sequential(*list(self.resnet50.children())[:-1])
-        
-        #self.in_features = self.resnet50.fc.in_features
-
-#         self.fc0 = nn.Linear(32768,256)
+        self.model_name = "resnet50"
         # grapheme_root
         self.sm = nn.Softmax(dim=-1)
         self.fc1 = nn.Linear(2048,168)
@@ -44,13 +38,8 @@ class ResNet50(torch.nn.Module):
         self.fc3 = nn.Linear(2048,7)
 
     def forward(self, x):
-#         x = self.resnet50(x)
         x = self.learned_features(x)
-#         print(x.shape)
-#         print(torch.flatten(x,1).shape)
         x = x.view(x.size(0), -1)
-#         print(x.shape)
-#         x = self.fc0(x)
         x1 = self.sm(x)
         x1 = self.fc1(x)
         x2 = self.sm(x)
@@ -58,3 +47,37 @@ class ResNet50(torch.nn.Module):
         x3 = self.sm(x)
         x3 = self.fc3(x)
         return x1,x2,x3
+
+
+
+
+
+# SERESNEXT50 Model
+class SeResNext50(torch.nn.Module):
+    def __init__(self,):
+        super(SeResNext50, self).__init__()
+        # LOADING PRETRAINED MODEL
+        self.model_name = 'se_resnext50_32x4d'
+        model = pretrainedmodels.__dict__[self.model_name](num_classes=1000, pretrained='imagenet')
+        self.seresnext50 = model
+        self.learned_features =  nn.Sequential(*list(self.seresnext50.children())[:-1])
+        
+        # grapheme_root
+        self.sm = nn.Softmax(dim=-1)
+        self.fc1 = nn.Linear(8192,168)
+        # vowel_diacritic 
+        self.fc2 = nn.Linear(8192,11)
+        # consonant_diacritic
+        self.fc3 = nn.Linear(8192,7)
+
+    def forward(self, x):
+        x = self.learned_features(x)
+        x = x.view(x.size(0), -1)
+        x1 = self.sm(x)
+        x1 = self.fc1(x)
+        x2 = self.sm(x)
+        x2 = self.fc2(x)
+        x3 = self.sm(x)
+        x3 = self.fc3(x)
+        return x1,x2,x3
+    
