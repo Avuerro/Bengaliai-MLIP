@@ -1,4 +1,4 @@
-# MLIP_Bengal
+# MLIP Bengaliai-cv19
 Repo for MLIP Project
 
 This project contains the source code for the Machine Learnign in Practice Assignment. The branches contain the notebooks that were used to submit in kaggle.
